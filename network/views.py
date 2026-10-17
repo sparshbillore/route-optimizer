@@ -71,3 +71,13 @@ class RouteHistoryView(generics.ListAPIView):
         if "limit" in params:
             queryset = queryset[: params["limit"]]
         return queryset
+
+
+class NodeDetailView(generics.RetrieveDestroyAPIView):
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer
+
+
+class EdgeDetailView(generics.RetrieveDestroyAPIView):
+    queryset = Edge.objects.select_related("source", "destination")
+    serializer_class = EdgeSerializer
