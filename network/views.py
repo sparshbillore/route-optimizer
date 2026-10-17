@@ -6,6 +6,8 @@ from .models import Edge, Node, RouteQuery
 from .serializers import (
     EdgeSerializer,
     NodeSerializer,
+    RouteHistoryFilterSerializer,
+    RouteQuerySerializer,
     ShortestRouteRequestSerializer,
 )
 from .services import shortest_path
@@ -47,3 +49,25 @@ def shortest_route(request):
         source=source, destination=destination, total_latency=total, path=path
     )
     return Response({"total_latency": total, "path": path})
+
+
+class RouteHistoryView(generics.ListAPIView):
+    serializer_class = RouteQuerySerializer
+
+    def get_queryset(self):
+        filters = RouteHistoryFilterSerializer(data=self.request.query_params)
+        filters.is_valid(raise_exception=True)
+        params = filters.validated_data
+
+        queryset = RouteQuery.objects.all()
+        if "source" in params:
+            queryset = queryset.filter(source=params["source"])
+        if "destination" in params:
+            queryset = queryset.filter(destination=params["destination"])
+        if "date_from" in params:
+            queryset = queryset.filter(created_at__gte=params["date_from"])
+        if "date_to" in params:
+            queryset = queryset.filter(created_at__lte=params["date_to"])
+        if "limit" in params:
+            queryset = queryset[: params["limit"]]
+        return queryset
