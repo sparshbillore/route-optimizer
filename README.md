@@ -12,7 +12,7 @@ A REST API for modelling a network of servers and their connection latencies, an
 ## Setup
 
 ```bash
-git clone <repo-url> route-optimizer
+git clone https://github.com/sparshbillore/route-optimizer.git route-optimizer
 cd route-optimizer
 python3 -m venv .venv
 source .venv/bin/activate
