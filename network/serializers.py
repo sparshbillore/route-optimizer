@@ -48,3 +48,12 @@ class EdgeSerializer(serializers.ModelSerializer):
                 f"Edge {source.name} → {destination.name} already exists."
             )
         return attrs
+
+
+class ShortestRouteRequestSerializer(serializers.Serializer):
+    source = serializers.SlugRelatedField(
+        slug_field="name", queryset=Node.objects.all()
+    )
+    destination = serializers.SlugRelatedField(
+        slug_field="name", queryset=Node.objects.all()
+    )
